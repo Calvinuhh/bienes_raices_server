@@ -1,3 +1,8 @@
-const saludo: string = "Hola mundo!";
+import server from "./app";
 
-console.log(saludo);
+process.loadEnvFile();
+const { PORT } = process.env;
+
+server.listen(PORT, () => {
+  console.log(`Servidor escuchando en el puerto: ${PORT}`);
+});
