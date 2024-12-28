@@ -4,4 +4,5 @@ export default interface UserModel {
   email: string;
   password: string;
   token?: string;
+  confirmed?: boolean;
 }

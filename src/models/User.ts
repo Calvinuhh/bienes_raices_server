@@ -26,7 +26,7 @@ class User extends Model<UserModel> {
   })
   declare id: string;
 
-  @Is(/^[a-zA-Z\s]+$/)
+  @Is(/^[a-zA-ZñÑ\s]+$/)
   @NotEmpty
   @Length({ min: 2, max: 35 })
   @Column({
@@ -46,6 +46,7 @@ class User extends Model<UserModel> {
 
   @Is(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{6,}$/)
   @Length({ min: 6 })
+  @NotEmpty
   @Column({
     type: DataType.STRING,
     allowNull: false,
@@ -56,6 +57,12 @@ class User extends Model<UserModel> {
     type: DataType.STRING,
   })
   declare token: string;
+
+  @Column({
+    type: DataType.BOOLEAN,
+    defaultValue: false,
+  })
+  declare confirmed: boolean;
 }
 
 export default User;

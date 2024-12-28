@@ -25,8 +25,8 @@ export const validateRegister = (
     if (!repetir_password)
       throw Error("Hace falta el campo repetir contraseña");
 
-    onlyStrings(name, "name");
-    validateLenghtFromTo(name, "name", 2, 35);
+    onlyStrings(name, "nombre");
+    validateLenghtFromTo(name, "nombre", 2, 35);
     validateEmail(email);
     securePassword(password, "password", 6);
     if (password !== repetir_password)

@@ -5,8 +5,7 @@ export const validateEmail = (email: string) => {
 };
 
 export const onlyStrings = (param: string, input: string) => {
-  const regex = /^[a-zA-Z\s]+$/;
-
+  const regex = /^[a-zA-ZñÑ\s]+$/;
   if (!regex.test(param))
     throw Error(
       `En el campo ${input} solo esta permitido letras, no numeros o caracteres especiales`

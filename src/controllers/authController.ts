@@ -17,16 +17,15 @@ export const loginController = async (req: Request, res: Response) => {
 
 export const registerController = async (req: Request, res: Response) => {
   try {
-    const { name, email, password, repetir_password }: RegisterDTO = req.body;
+    const { name, email, password }: RegisterDTO = req.body;
 
     const newUser = await createUser({
       name,
       email,
       password,
-      repetir_password,
     });
 
-    if (newUser) res.status(201).json(newUser);
+    if (newUser) res.status(201).json("Usuario creado con éxito");
   } catch (error) {
     const err = error as Error;
     res.status(400).json(err.message);

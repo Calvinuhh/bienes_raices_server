@@ -1,6 +1,7 @@
 import UserModel from "../user";
 
-export interface RegisterDTO extends Omit<UserModel, "id" | "token"> {
+export interface RegisterDTO
+  extends Omit<UserModel, "id" | "token" | "confirmed"> {
   repetir_password?: string;
 }
 export type LoginDTO = Pick<UserModel, "email" | "password">;
