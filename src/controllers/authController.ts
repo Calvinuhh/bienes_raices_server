@@ -4,7 +4,10 @@ import {
   RecoverPasswordDTO,
   RegisterDTO,
 } from "../interfaces/DTOs/userDTOs";
-import { createUser } from "../services/authService";
+import { createUser, confirmToken } from "../services/authService";
+
+process.loadEnvFile();
+const { CLIENT_URL } = process.env;
 
 export const loginController = async (req: Request, res: Response) => {
   try {
@@ -38,6 +41,31 @@ export const recoverPasswordController = async (
 ) => {
   try {
     const { email }: RecoverPasswordDTO = req.body;
+  } catch (error) {
+    const err = error as Error;
+    res.status(400).json(err.message);
+  }
+};
+
+export const confirmAccountController = async (req: Request, res: Response) => {
+  try {
+    const { token } = req.params;
+
+    const confirm = await confirmToken(token);
+
+    if (confirm)
+      res.status(200).redirect(`${CLIENT_URL}/confirmacion/${token}`);
+  } catch (error) {
+    const err = error as Error;
+    res.status(400).json(err.message);
+  }
+};
+
+const searchTokenController = async (req: Request, res: Response) => {
+  try {
+    const { token } = req.params;
+
+    
   } catch (error) {
     const err = error as Error;
     res.status(400).json(err.message);
