@@ -1,8 +1,18 @@
 import server from "./app";
+import database from "./database/db";
 
 process.loadEnvFile();
 const { PORT } = process.env;
 
-server.listen(PORT, () => {
-  console.log(`Servidor escuchando en el puerto: ${PORT}`);
-});
+database
+  .sync({ force: true })
+  .then(() => {
+    server.listen(PORT, () => {
+      console.log("Base de datos sincronizada correctamente");
+      console.log(`Servidor escuchando en el puerto: ${PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.log("Error al sincronizar la base de datos");
+    throw Error(error.message);
+  });

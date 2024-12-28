@@ -1,8 +1,14 @@
 import { Request, Response } from "express";
+import {
+  LoginDTO,
+  RecoverPasswordDTO,
+  RegisterDTO,
+} from "../interfaces/DTOs/userDTOs";
+import { createUser } from "../services/authService";
 
 export const loginController = async (req: Request, res: Response) => {
   try {
-    const { email, password } = req.body;
+    const { email, password }: LoginDTO = req.body;
   } catch (error) {
     const err = error as Error;
     res.status(400).json(err.message);
@@ -11,7 +17,16 @@ export const loginController = async (req: Request, res: Response) => {
 
 export const registerController = async (req: Request, res: Response) => {
   try {
-    const { nombre, email, password, repetir_password } = req.body;
+    const { name, email, password, repetir_password }: RegisterDTO = req.body;
+
+    const newUser = await createUser({
+      name,
+      email,
+      password,
+      repetir_password,
+    });
+
+    if (newUser) res.status(201).json(newUser);
   } catch (error) {
     const err = error as Error;
     res.status(400).json(err.message);
@@ -23,7 +38,7 @@ export const recoverPasswordController = async (
   res: Response
 ) => {
   try {
-    const { email } = req.body;
+    const { email }: RecoverPasswordDTO = req.body;
   } catch (error) {
     const err = error as Error;
     res.status(400).json(err.message);
