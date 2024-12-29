@@ -2,7 +2,7 @@ import { RegisterDTO } from "../interfaces/DTOs/userDTOs";
 import User from "../models/User";
 import { checkEmailExists } from "../utils/checkEmailExists";
 import { hashPassword } from "../utils/checkAndHashPassword";
-import { enviarEmail } from "../email/email";
+import { enviarEmail, enviarEmailRecuperarContraseña } from "../email/email";
 
 export const createUser = async (data: RegisterDTO) => {
   const { email, name, password } = data;
@@ -26,16 +26,40 @@ export const confirmToken = async (token: string) => {
 
   if (!user) throw Error("Token inválido");
 
+  return user.token;
+};
+
+export const deleteToken = async (token: string) => {
+  const user = await User.findOne({ where: { token } });
+
+  if (!user) throw Error("Token inválido");
+
+  user.token = "";
   user.confirmed = true;
 
   await user.save();
-
-  if (user) return true;
 };
 
+export const sendEmailRecoverPassword = async (email: string) => {
+  const user = await User.findOne({ where: { email } });
 
+  if (!user) throw Error("Email no encontrado");
 
-export const searchToken = (token: string) => {
+  user.token =
+    Math.random().toString(36).substring(2) + Date.now().toString(36);
+  user.save();
 
+  await enviarEmailRecuperarContraseña(user.email, user.token);
 
+  return "Revisa tu correo para más instrucciones.";
+};
+
+export const deleteTokenAfterRecoverPassword = async (token: string) => {
+  const user = await User.findOne({ where: { token } });
+
+  if (!user) throw Error("Token inválido");
+
+  user.token = "";
+
+  await user.save();
 };

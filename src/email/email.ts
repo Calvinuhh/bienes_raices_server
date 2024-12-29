@@ -1,13 +1,13 @@
 import nodemailer from "nodemailer";
 
 process.loadEnvFile();
-const { MAIL_HOST, MAIL_PORT, MAIL_USER, MAIL_PASSWORD, SERVER_URL, PORT } =
+const { MAIL_HOST, MAIL_PORT, MAIL_USER, MAIL_PASSWORD, CLIENT_URL, PORT } =
   process.env as {
     MAIL_HOST: string;
     MAIL_PORT: string;
     MAIL_USER: string;
     MAIL_PASSWORD: string;
-    SERVER_URL: string;
+    CLIENT_URL: string;
     PORT: string;
   };
 
@@ -31,11 +31,25 @@ export const enviarEmail = async (
     subject: "Confirma tu cuenta en BienesRaices",
 
     html: `
-      <p>Hola ${name}</p>
-      <p>haz click en el siguiente enlace para confirmar tu cuenta:</p>
-      <a href="${SERVER_URL}:${PORT}/auth/token/${token}">Confirmar cuenta</a>
+      <p>Hola ${name}</p> <br> </br>
+      <p>haz click en el siguiente enlace para confirmar tu cuenta:</p> <br> </br>
+      <a href="${CLIENT_URL}/confirmacion/${token}">Confirmar cuenta</a>
     `,
   });
 };
 
-// CAMBIAR LA URL DEL BACKEND POR LA URL DEL FRONTEND
+export const enviarEmailRecuperarContraseña = async (
+  email: string,
+  token: string
+) => {
+  await transport.sendMail({
+    from: "BienesRaices",
+    to: email,
+    subject: "Recuperar contraseña en BienesRaices",
+
+    html: `
+      <p>haz click en el siguiente enlace para recuperar tu contraseña:</p> <br> </br>
+      <a href="${CLIENT_URL}/cambiar_password/${token}">Recuperar contraseña</a>
+    `,
+  });
+};

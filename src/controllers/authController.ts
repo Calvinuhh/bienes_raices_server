@@ -4,10 +4,12 @@ import {
   RecoverPasswordDTO,
   RegisterDTO,
 } from "../interfaces/DTOs/userDTOs";
-import { createUser, confirmToken } from "../services/authService";
-
-process.loadEnvFile();
-const { CLIENT_URL } = process.env;
+import {
+  createUser,
+  confirmToken,
+  deleteToken,
+  sendEmailRecoverPassword,
+} from "../services/authService";
 
 export const loginController = async (req: Request, res: Response) => {
   try {
@@ -41,6 +43,8 @@ export const recoverPasswordController = async (
 ) => {
   try {
     const { email }: RecoverPasswordDTO = req.body;
+
+    res.status(200).json(await sendEmailRecoverPassword(email));
   } catch (error) {
     const err = error as Error;
     res.status(400).json(err.message);
@@ -51,21 +55,30 @@ export const confirmAccountController = async (req: Request, res: Response) => {
   try {
     const { token } = req.params;
 
-    const confirm = await confirmToken(token);
+    const tokenExists = await confirmToken(token);
 
-    if (confirm)
-      res.status(200).redirect(`${CLIENT_URL}/confirmacion/${token}`);
+    if (tokenExists) res.status(200).json(tokenExists);
   } catch (error) {
     const err = error as Error;
     res.status(400).json(err.message);
   }
 };
 
-const searchTokenController = async (req: Request, res: Response) => {
+export const deleteTokenController = async (req: Request, res: Response) => {
   try {
-    const { token } = req.params;
+    const { token } = req.body;
 
-    
+    await deleteToken(token);
+    res.status(200).json("Token eliminado con éxito");
+  } catch (error) {
+    const err = error as Error;
+    res.status(400).json(err.message);
+  }
+};
+
+export const changePasswordController = async (req: Request, res: Response) => {
+  try {
+    const { token, password } = req.body;
   } catch (error) {
     const err = error as Error;
     res.status(400).json(err.message);
