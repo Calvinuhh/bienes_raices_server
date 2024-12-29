@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { securePassword } from "../utils/inputValidations";
+import { UpdatePasswordMiddleware } from "../interfaces/DTOs/userDTOs";
 
 export const changePasswordValidation = (
   req: Request,
@@ -7,7 +8,7 @@ export const changePasswordValidation = (
   next: NextFunction
 ) => {
   try {
-    const { password, repetir_password } = req.body;
+    const { password, repetir_password }: UpdatePasswordMiddleware = req.body;
 
     for (const key in req.body) {
       if (!req.body[key]) throw Error(`El campo ${key} esta vacio`);

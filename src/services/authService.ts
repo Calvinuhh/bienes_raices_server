@@ -2,7 +2,7 @@ import { RegisterDTO } from "../interfaces/DTOs/userDTOs";
 import User from "../models/User";
 import { checkEmailExists } from "../utils/checkEmailExists";
 import { hashPassword } from "../utils/checkAndHashPassword";
-import { enviarEmail, enviarEmailRecuperarContraseña } from "../email/email";
+import { enviarEmail } from "../email/email";
 
 export const createUser = async (data: RegisterDTO) => {
   const { email, name, password } = data;

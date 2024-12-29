@@ -1,6 +1,8 @@
 import { Router } from "express";
+
+import { loginController } from "../../controllers/loginController";
+
 import {
-  loginController,
   registerController,
   confirmAccountController,
   deleteTokenController,
@@ -14,10 +16,11 @@ import {
 
 import { validateRegister } from "../../middlewares/inputValidations";
 import {changePasswordValidation} from "../../middlewares/changePasswordValidation"
+import { loginMiddleware } from "../../middlewares/loginValidation";
 
 const authRouter: Router = Router();
 
-authRouter.post("/login", loginController);
+authRouter.post("/login", loginMiddleware, loginController);
 
 authRouter.post("/registro", validateRegister, registerController);
 authRouter.get("/confirmacion/:token", confirmAccountController);

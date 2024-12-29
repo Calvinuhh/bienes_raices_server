@@ -1,15 +1,16 @@
 import { Request, Response } from "express";
-import { RecoverPasswordDTO } from "../interfaces/DTOs/userDTOs";
+import { ChangePasswordDTO, Email } from "../interfaces/DTOs/userDTOs";
 import { sendEmailRecoverPassword } from "../services/changePassword";
 import { confirmToken } from "../services/authService";
 import { deleteTokenAfterChangePassword } from "../services/changePassword";
+import { Token } from "../interfaces/DTOs/userDTOs";
 
 export const recoverPasswordController = async (
   req: Request,
   res: Response
 ) => {
   try {
-    const { email }: RecoverPasswordDTO = req.body;
+    const { email }: Email = req.body;
 
     res.status(200).json(await sendEmailRecoverPassword(email));
   } catch (error) {
@@ -23,7 +24,7 @@ export const confirmChangePasswordToken = async (
   res: Response
 ) => {
   try {
-    const { token } = req.params;
+    const { token }: Token = req.params;
 
     const tokenExists = await confirmToken(token);
 
@@ -36,9 +37,9 @@ export const confirmChangePasswordToken = async (
 
 export const changePasswordController = async (req: Request, res: Response) => {
   try {
-    const { token, password } = req.body;
+    const { token, password }: ChangePasswordDTO = req.body;
 
-    await deleteTokenAfterChangePassword(token, password);
+    if (token) await deleteTokenAfterChangePassword(token, password);
 
     res.status(200).json("Contraseña cambiada con exito");
   } catch (error) {
