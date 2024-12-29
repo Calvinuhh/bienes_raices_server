@@ -39,27 +39,3 @@ export const deleteToken = async (token: string) => {
 
   await user.save();
 };
-
-export const sendEmailRecoverPassword = async (email: string) => {
-  const user = await User.findOne({ where: { email } });
-
-  if (!user) throw Error("Email no encontrado");
-
-  user.token =
-    Math.random().toString(36).substring(2) + Date.now().toString(36);
-  user.save();
-
-  await enviarEmailRecuperarContraseña(user.email, user.token);
-
-  return "Revisa tu correo para más instrucciones.";
-};
-
-export const deleteTokenAfterRecoverPassword = async (token: string) => {
-  const user = await User.findOne({ where: { token } });
-
-  if (!user) throw Error("Token inválido");
-
-  user.token = "";
-
-  await user.save();
-};
